@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`There is any children in root. 1`] = `
+<div
+  className="sc-bdVaJa gvRYuS"
+>
+  <p
+    className="sc-bwzfXH ixKSS"
+  >
+    Hello,world!
+  </p>
+</div>
+`;
