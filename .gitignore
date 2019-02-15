@@ -1,3 +1,9 @@
+# yarn
+.cache/
+
+# parcel
+dist/
+
 # Logs
 logs
 *.log
