@@ -1,9 +1,48 @@
 import ReactDOM from 'react-dom';
-import React from 'react';
-import App from './src/App';
+import App from './src/client/App';
 
 declare const exit: any;
 
-window.onbeforeunload = exit;
+window.onbeforeunload = typeof exit !== 'undefined' ? exit : null;
 
-ReactDOM.render(<App />, document.getElementById('root'));
+import React, { Component } from 'react';
+import styled from 'styled-components';
+import { observer, Provider } from 'mobx-react';
+import MobxDevTools from 'mobx-react-devtools';
+import useIcons from './src/util/useIcons';
+import tokenStore from './src/client/stores/TokenStore';
+import axiosStore from './src/client/stores/AxiosStore';
+useIcons();
+
+window.setInterval(() => {
+  window.onbeforeunload = null;
+}, 1000);
+
+const Container = styled.div`
+  background-color: #36393f;
+  width: 100vw;
+  height: auto;
+  min-height: 100vh;
+  padding: 6rem 0 0 0;
+  color: white;
+  user-select: none;
+`;
+
+@observer
+export default class Index extends Component<{}, {}> {
+  constructor(props: any) {
+    super(props);
+  }
+  render() {
+    return (
+      <Container>
+        <Provider token={tokenStore} axios={axiosStore}>
+          <App />
+        </Provider>
+        <MobxDevTools />
+      </Container>
+    );
+  }
+}
+
+ReactDOM.render(<Index />, document.getElementById('root'));
