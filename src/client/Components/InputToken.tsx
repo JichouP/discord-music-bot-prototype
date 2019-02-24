@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
-import { TokenStore } from '../stores/TokenStore';
+import { Store } from '../stores/Store';
 import styled from 'styled-components';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { postToken } from '../../util/axios';
 
 const Color = {
   ShowButtonBackground: {
@@ -40,8 +39,8 @@ const ShowButton = styled.button`
   border-bottom-right-radius: 5px;
   border-top-right-radius: 5px;
 `;
-const KeyIconWrapper = styled.span`
-  font-size: 1.34rem;
+const KeyIcon = styled.button`
+  font-size: 1.2rem;
   color: #555;
   background-color: white;
   text-align: center;
@@ -49,14 +48,13 @@ const KeyIconWrapper = styled.span`
   border-left: solid white 10px;
   border-bottom-left-radius: 5px;
   border-top-left-radius: 5px;
-  vertical-align: -1px;
   transform: rotate(0.05deg);
 `;
 
-@inject('token')
+@inject('store')
 @observer
 export default class InputToken extends Component<
-  { token?: TokenStore },
+  { store?: Store },
   { show: boolean; status: 'normal' | 'success' | 'failed' }
 > {
   constructor(props: any) {
@@ -66,53 +64,52 @@ export default class InputToken extends Component<
       status: 'normal',
     };
   }
-  componentDidMount() {
-    window.setTimeout(async () => {
-      if (this.props.token && this.props.token.token) {
-        try {
-          await postToken(this.props.token.token);
+  updateToken = (token: string) => {
+    if (token.length === 59) this.props.store!.token = token;
+  };
+  onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e) {
+      this.props.store!.token = e.target.value;
+    }
+    if (this.props.store!.token.length === 59) {
+      //update only when token is correct length
+      this.props
+        .store!.client.login(this.props.store!.token)
+        .then(() => {
           this.setState({ ...this.state, status: 'success' });
-          this.props.token.status = true;
-        } catch {
+          this.props.store!.clientStatus = true;
+        })
+        .catch(() => {
           this.setState({ ...this.state, status: 'failed' });
-          this.props.token.status = false;
-        }
-      }
-    }, 0);
+          this.props.store!.clientStatus = false;
+        });
+    }
+  };
+  componentDidMount() {
+    window.setTimeout(this.onChangeHandler, 0);
   }
   render() {
     return (
       <Container>
         <label>
-          <KeyIconWrapper
+          <KeyIcon
+            disabled
             style={{
               backgroundColor: Color.InputBackground[this.state.status],
               borderColor: Color.InputBackground[this.state.status],
             }}>
             <FontAwesomeIcon icon='key' />
-          </KeyIconWrapper>
+          </KeyIcon>
           <Input
             type={this.state.show ? 'text' : 'password'}
             name='name'
             placeholder='Paste Token here!'
-            value={this.props.token && this.props.token.token}
+            value={this.props.store!.token}
             style={{
               backgroundColor: Color.InputBackground[this.state.status],
               borderColor: Color.InputBackground[this.state.status],
             }}
-            onChange={async e => {
-              this.props.token!.token = e.target.value;
-              if (this.props.token!.token.length === 59) {
-                try {
-                  await postToken(e.target.value);
-                  this.setState({ ...this.state, status: 'success' });
-                  this.props.token && (this.props.token.status = true);
-                } catch {
-                  this.setState({ ...this.state, status: 'failed' });
-                  this.props.token && (this.props.token.status = false);
-                }
-              }
-            }}
+            onChange={this.onChangeHandler}
           />
           <ShowButton
             style={{

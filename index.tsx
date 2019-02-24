@@ -10,8 +10,7 @@ import styled from 'styled-components';
 import { observer, Provider } from 'mobx-react';
 import MobxDevTools from 'mobx-react-devtools';
 import useIcons from './src/util/useIcons';
-import tokenStore from './src/client/stores/TokenStore';
-import axiosStore from './src/client/stores/AxiosStore';
+import store from './src/client/stores/Store';
 useIcons();
 
 window.setInterval(() => {
@@ -36,7 +35,7 @@ export default class Index extends Component<{}, {}> {
   render() {
     return (
       <Container>
-        <Provider token={tokenStore} axios={axiosStore}>
+        <Provider store={store}>
           <App />
         </Provider>
         <MobxDevTools />

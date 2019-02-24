@@ -1,27 +1,52 @@
 import React, { Component } from 'react';
-import { inject } from 'mobx-react';
-import { AxiosStore } from '../stores/AxiosStore';
+import { inject, observer } from 'mobx-react';
 import Selector from './Selector';
+import { Store } from '../stores/Store';
+import { TextChannel } from 'discord.js';
+import { autorun } from 'mobx';
 
-@inject('axios')
-export default class GuildsSelector extends Component<{ axios?: AxiosStore; classes?: any }> {
+@inject('store')
+@observer
+export default class GuildsSelector extends Component<
+  { store?: Store; classes?: any },
+  { disposer?: () => void; value?: string }
+> {
   constructor(props: any) {
     super(props);
+    this.state = { disposer: undefined, value: undefined };
   }
   componentDidMount() {
-    this.props.axios!.selectedGuild = this.props.axios!.guilds![0][1];
+    this.props.store!.selectedGuild = this.props.store!.client.guilds.first();
+    const selectedGuild = this.props.store!.selectedGuild; // update store and make alias
+    this.props.store!.selectedTextChannel = ((selectedGuild!.channels.find(v => v.name === 'music') && // null check
+      selectedGuild!.channels.find(v => v.name === 'music')) || // musicチャンネルがあったらそれを優先，なければgeneral
+      selectedGuild!.channels.find(v => v.id === selectedGuild!.id)) as TextChannel; //generalChannelId === guildId
+    this.setState({
+      ...this.state,
+      disposer: autorun(() => {
+        this.setState({ ...this.state, value: this.props.store!.selectedGuild!.id });
+      }),
+    });
   }
+  componentWillUnmount = () => {
+    if (this.state.disposer) {
+      this.state.disposer();
+    }
+  };
+  onChangeHandle = (value: string) => {
+    const guilds = this.props.store!.client.guilds;
+    const selectedGuild = (this.props.store!.selectedGuild = guilds.find(v => v.id === value)); // update store and make alias
+    this.props.store!.selectedTextChannel = ((selectedGuild!.channels.find(v => v.name === 'music') && // null check
+      selectedGuild!.channels.find(v => v.name === 'music')) || // musicチャンネルがあったらそれを優先，なければgeneral
+      selectedGuild!.channels.find(v => v.id === selectedGuild!.id)) as TextChannel; //generalChannelId === guildId
+  };
   render() {
+    const guilds = this.props.store!.client.guilds;
     return (
       <Selector
-        items={this.props.axios!.guilds!.map(v => [v[1].id, v[1].name])}
-        initialValue={this.props.axios!.guilds![0][1].id}
-        onChangeHandle={(value: string) => {
-          const selected = this.props.axios!.guilds!.find(v => v[1].id === value)![1];
-          if (selected) {
-            this.props.axios!.selectedGuild! = selected;
-          }
-        }}
+        items={guilds.map(v => [v.id, v.name])}
+        initialValue={this.state.value}
+        onChangeHandle={this.onChangeHandle}
       />
     );
   }

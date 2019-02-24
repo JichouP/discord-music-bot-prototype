@@ -1,19 +1,17 @@
 import React, { Component } from 'react';
 import { observer, inject } from 'mobx-react';
-import { TokenStore } from '../stores/TokenStore';
-import { AxiosStore } from '../stores/AxiosStore';
 import GuildsSelect from './GuildsSelector';
-import ChannelsSelector from './ChannelSelector';
+import TextChannelsSelector from './TextChannelSelector';
+import { Store } from '../stores/Store';
 
-@inject('token')
-@inject('axios')
+@inject('store')
 @observer
-export default class Controller extends Component<{ token?: TokenStore; axios?: AxiosStore }> {
+export default class Controller extends Component<{ store?: Store }> {
   render() {
     return (
       <div>
-        {this.props.axios!.guilds && <GuildsSelect />}
-        {this.props.axios!.selectedGuild && <ChannelsSelector />}
+        {this.props.store!.client.guilds && <GuildsSelect />}
+        {this.props.store!.selectedGuild && <TextChannelsSelector />}
       </div>
     );
   }

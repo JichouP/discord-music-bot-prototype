@@ -5,27 +5,32 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
+import { observer } from 'mobx-react';
 
-class Selector extends Component<
-  { classes?: any; onChangeHandle: (arg: any) => void; items: [string, string][]; initialValue: string },
-  { value: string }
-> {
+@observer
+class Selector extends Component<{
+  classes?: any;
+  onChangeHandle: (arg: any) => void;
+  items: [string, string][];
+  initialValue: string;
+}> {
   constructor(props: any) {
     super(props);
-    this.state = { value: this.props.initialValue || '' };
+    setTimeout(() => {
+      console.log(this.props.initialValue);
+    }, 1);
   }
 
   render() {
     const { classes } = this.props;
     return (
-      <form className={classes.root} autoComplete='off'>
+      <form autoComplete='off'>
         <FormControl variant='outlined' className={classes.formControl} style={{ borderRadius: 5 }}>
           <InputLabel htmlFor='outlined-age-simple' />
           <Select
-            value={this.state.value}
+            value={this.props.initialValue}
             onChange={e => {
               this.props.onChangeHandle(e.target.value);
-              this.setState({ ...this.state, value: e.target.value });
             }}
             input={
               <OutlinedInput

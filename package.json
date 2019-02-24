@@ -4,7 +4,7 @@
   "description": "This is the music player which works with \"carlo\".",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --no-cache",
     "test:watch": "jest --watch",
     "start": "nodemon --inspect build/server/app.js",
     "build": "yarn build:server && yarn build:client",
@@ -54,11 +54,12 @@
     "yarn": "^1.13.0"
   },
   "devDependencies": {
+    "@babel/plugin-proposal-decorators": "^7.3.0",
     "@babel/preset-env": "^7.3.1",
     "@babel/preset-react": "^7.0.0",
     "@types/axios": "^0.14.0",
     "@types/express": "^4.16.1",
-    "@types/jest": "^24.0.5",
+    "@types/jest": "^24.0.6",
     "@types/react": "^16.8.3",
     "@types/react-dom": "^16.8.1",
     "@types/react-test-renderer": "^16.8.1",
@@ -67,6 +68,21 @@
     "mobx-react-devtools": "^6.0.3",
     "nodemon": "^1.18.10",
     "parcel-bundler": "^1.11.0",
-    "typescript": "^3.3.3"
+    "ts-jest": "^24.0.0",
+    "typescript": "^3.3.3333"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ]
   }
 }
