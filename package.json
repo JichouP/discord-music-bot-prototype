@@ -38,7 +38,7 @@
     "@fortawesome/react-fontawesome": "^0.1.4",
     "@material-ui/core": "^3.9.2",
     "add": "^2.0.6",
-    "axios": "^0.18.0",
+    "axios": "^0.18.1",
     "body-parser": "^1.18.3",
     "carlo": "^0.9.43",
     "discord.js": "^11.4.2",
