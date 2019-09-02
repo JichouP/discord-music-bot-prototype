@@ -68985,7 +68985,7 @@ var free_regular_svg_icons_1 = require("@fortawesome/free-regular-svg-icons");
 var free_brands_svg_icons_1 = require("@fortawesome/free-brands-svg-icons");
 
 exports.default = function () {
-  fontawesome_svg_core_1.library.add(free_regular_svg_icons_1.faEye, free_regular_svg_icons_1.faEyeSlash, free_brands_svg_icons_1.faDiscord, free_solid_svg_icons_1.faKey, free_solid_svg_icons_1.faHeart);
+  fontawesome_svg_core_1.library.add(free_regular_svg_icons_1.faEye, free_regular_svg_icons_1.faEyeSlash, free_brands_svg_icons_1.faDiscord, free_solid_svg_icons_1.faKey, free_solid_svg_icons_1.faHeart, free_solid_svg_icons_1.faMicrophone, free_regular_svg_icons_1.faComment);
 };
 },{"@fortawesome/fontawesome-svg-core":"node_modules/@fortawesome/fontawesome-svg-core/index.es.js","@fortawesome/free-solid-svg-icons":"node_modules/@fortawesome/free-solid-svg-icons/index.es.js","@fortawesome/free-regular-svg-icons":"node_modules/@fortawesome/free-regular-svg-icons/index.es.js","@fortawesome/free-brands-svg-icons":"node_modules/@fortawesome/free-brands-svg-icons/index.es.js"}],"src/client/Components/Copyright.tsx":[function(require,module,exports) {
 "use strict";
